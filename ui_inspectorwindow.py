@@ -79,5 +79,6 @@ class Ui_InspectorWindow(object):
                 "InspectorWindow",
                 "Find similar words"))
         self.groupBox_2.setTitle(_translate("InspectorWindow", "Results"))
-        self.menuFile.setTitle(_translate("InspectorWindow", "File"))
+        self.menuFile.setTitle(_translate("InspectorWindow", "&File"))
         self.actionQuit.setText(_translate("InspectorWindow", "&Quit"))
+        self.actionQuit.setShortcut(_translate("InspectorWindow", "Ctrl+Q"))
