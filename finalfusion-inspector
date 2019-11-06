@@ -1,13 +1,31 @@
 #!/usr/bin/env python3
 
+import argparse
 import sys
 
 from PyQt5.QtWidgets import QApplication
+import finalfusion
 
 from inspectorwindow import InspectorWindow
 
-app = QApplication(sys.argv)
-window = InspectorWindow()
-window.show()
 
-sys.exit(app.exec_())
+parser = argparse.ArgumentParser(description='Inspect finalfusion embeddings.')
+parser.add_argument(
+    'embeddings',
+    metavar='EMBEDS',
+    help='the embeddings to inspect')
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+
+    try:
+        embeddings = finalfusion.Embeddings(args.embeddings, mmap=True)
+    except Exception as e:
+        print("Cannot load embeddings from %s: %s" % (args.embeddings, e))
+        sys.exit(1)
+
+    app = QApplication(sys.argv)
+    window = InspectorWindow(embeddings)
+    window.show()
+
+    sys.exit(app.exec_())

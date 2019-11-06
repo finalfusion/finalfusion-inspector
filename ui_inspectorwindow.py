@@ -23,10 +23,13 @@ class Ui_InspectorWindow(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.groupBox)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.queryLineEdit = QtWidgets.QLineEdit(self.groupBox)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding,
+            QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.queryLineEdit.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            self.queryLineEdit.sizePolicy().hasHeightForWidth())
         self.queryLineEdit.setSizePolicy(sizePolicy)
         self.queryLineEdit.setObjectName("queryLineEdit")
         self.horizontalLayout.addWidget(self.queryLineEdit)
@@ -38,9 +41,12 @@ class Ui_InspectorWindow(object):
         self.groupBox_2.setObjectName("groupBox_2")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.groupBox_2)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
-        self.similarListView = QtWidgets.QListView(self.groupBox_2)
-        self.similarListView.setObjectName("similarListView")
-        self.verticalLayout_2.addWidget(self.similarListView)
+        self.similarView = QtWidgets.QTableView(self.groupBox_2)
+        self.similarView.setAlternatingRowColors(True)
+        self.similarView.setSelectionMode(
+            QtWidgets.QAbstractItemView.SingleSelection)
+        self.similarView.setObjectName("similarView")
+        self.verticalLayout_2.addWidget(self.similarView)
         self.verticalLayout.addWidget(self.groupBox_2)
         InspectorWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(InspectorWindow)
@@ -63,9 +69,15 @@ class Ui_InspectorWindow(object):
 
     def retranslateUi(self, InspectorWindow):
         _translate = QtCore.QCoreApplication.translate
-        InspectorWindow.setWindowTitle(_translate("InspectorWindow", "finalfusion inspector"))
+        InspectorWindow.setWindowTitle(
+            _translate(
+                "InspectorWindow",
+                "finalfusion inspector"))
         self.groupBox.setTitle(_translate("InspectorWindow", "Query"))
-        self.queryPushButton.setText(_translate("InspectorWindow", "Find similar words"))
+        self.queryPushButton.setText(
+            _translate(
+                "InspectorWindow",
+                "Find similar words"))
         self.groupBox_2.setTitle(_translate("InspectorWindow", "Results"))
         self.menuFile.setTitle(_translate("InspectorWindow", "File"))
         self.actionQuit.setText(_translate("InspectorWindow", "&Quit"))
