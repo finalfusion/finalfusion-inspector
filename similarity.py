@@ -7,6 +7,7 @@ from PyQt5.QtWidgets import QHeaderView, QWidget
 
 from ui_analogywidget import Ui_AnalogyWidget
 from ui_similaritywidget import Ui_SimilarityWidget
+from validators import QueryValidator, applyValidityColor
 
 
 class WordStatus(Enum):
@@ -50,66 +51,35 @@ class AnalogyWidget(QWidget):
         self.ui.queryPushButton.setEnabled(False)
         self.ui.queryPushButton.clicked.connect(self.querySubmitted)
 
-        self.ui.analogy1Edit.returnPressed.connect(self.querySubmitted)
-        self.ui.analogy2Edit.returnPressed.connect(self.querySubmitted)
-        self.ui.analogy3Edit.returnPressed.connect(self.querySubmitted)
-        self.ui.analogy1Edit.textChanged.connect(self.queryChanged)
-        self.ui.analogy2Edit.textChanged.connect(self.queryChanged)
-        self.ui.analogy3Edit.textChanged.connect(self.queryChanged)
+        self._edits = [
+            self.ui.analogy1Edit,
+            self.ui.analogy2Edit,
+            self.ui.analogy3Edit]
+        for edit in self._edits:
+            edit.setValidator(QueryValidator(self._embeddings.vocab()))
+            edit.textChanged.connect(self.applyValidityColor)
+            edit.returnPressed.connect(self.querySubmitted)
+            edit.textChanged.connect(self.queryChanged)
+
+    def applyValidityColor(self):
+        applyValidityColor(self.sender())
 
     def query(self):
-        return [
-            self.ui.analogy1Edit.text().strip(),
-            self.ui.analogy2Edit.text().strip(),
-            self.ui.analogy3Edit.text().strip()]
-
-    def is_query_empty(self):
-        return any(len(q) == 0 for q in self.query())
+        return list(map(lambda edit: edit.text(), self._edits))
 
     def queryChanged(self):
-        self.ui.queryPushButton.setEnabled(not self.is_query_empty())
+        allValid = all([edit.hasAcceptableInput() for edit in self._edits])
+        self.ui.queryPushButton.setEnabled(allValid)
 
     def querySubmitted(self):
-        if self.is_query_empty():
+        # Should not be possible, but let's be paranoid.
+        allValid = all([edit.hasAcceptableInput() for edit in self._edits])
+        if not allValid:
             return
 
         self.similarityModel.clear()
 
-        query = self.query()
-
-        query_status = [(q, is_vocab_word(self._embeddings.vocab(), q))
-                        for q in query]
-        query_unknowns = list(
-            filter(
-                lambda s: s[1] == WordStatus.UNKNOWN,
-                query_status))
-        if len(query_unknowns) != 0:
-            self._statusBar.showMessage("Query that are not in the vocabulary: %s" % ", ".join(
-                map(lambda q: q[0], query_unknowns)))
-            return
-
-        messageParts = []
-        query_known = list(
-            filter(
-                lambda s: s[1] == WordStatus.KNOWN,
-                query_status))
-        print(list(map(lambda q: q[0], query_known)))
-        if len(query_known) != 0:
-            messageParts.append("In the vocabulary: %s" %
-                                ", ".join(map(lambda q: q[0], query_known)))
-
-        query_subword = list(
-            filter(
-                lambda s: s[1] == WordStatus.SUBWORD,
-                query_status))
-        print(query_subword)
-        if len(query_subword) != 0:
-            messageParts.append("In the subword vocabulary: %s" %
-                                ", ".join(map(lambda q: q[0], query_subword)))
-
-        self._statusBar.showMessage(", ".join(messageParts))
-
-        self.similarityModel.analogyQuery(query)
+        self.similarityModel.analogyQuery(self.query())
 
     @property
     def similarityModel(self):
@@ -193,36 +163,31 @@ class SimilarityWidget(QWidget):
         self.ui.queryPushButton.setEnabled(False)
         self.ui.queryPushButton.clicked.connect(self.querySubmitted)
 
+        self.ui.queryLineEdit.setValidator(
+            QueryValidator(self._embeddings.vocab()))
+        self.ui.queryLineEdit.textChanged.connect(self.applyValidityColor)
         self.ui.queryLineEdit.returnPressed.connect(self.querySubmitted)
         self.ui.queryLineEdit.textChanged.connect(self.queryChanged)
+
+    def applyValidityColor(self):
+        applyValidityColor(self.sender())
 
     @property
     def query(self):
         return self.ui.queryLineEdit.text().strip()
 
     def queryChanged(self):
-        self.ui.queryPushButton.setEnabled(len(self.query) != 0)
+        self.ui.queryPushButton.setEnabled(
+            self.ui.queryLineEdit.hasAcceptableInput())
 
     def querySubmitted(self):
-        word = self.query
-        if len(word) == 0:
+        # Should not be possible, but let's be paranoid.
+        if not self.ui.queryLineEdit.hasAcceptableInput():
             return
 
         self.similarityModel.clear()
 
-        wordStatus = is_vocab_word(self._embeddings.vocab(), word)
-        if wordStatus == WordStatus.UNKNOWN:
-            self._statusBar.showMessage(
-                "%s is out of the vocabulary and a subword lookup was not possible" %
-                word)
-            return
-        elif wordStatus == WordStatus.KNOWN:
-            self._statusBar.showMessage("%s is in the vocabulary" % word)
-        else:
-            self._statusBar.showMessage(
-                "%s is in the subword vocabulary" % word)
-
-        self.similarityModel.query(word)
+        self.similarityModel.query(self.query)
 
     @property
     def similarityModel(self):
