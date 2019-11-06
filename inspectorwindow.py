@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow
 
 from ui_inspectorwindow import Ui_InspectorWindow
-from similarity import SimilarityWidget
+from similarity import AnalogyWidget, SimilarityWidget
 
 
 class InspectorWindow(QMainWindow):
@@ -16,3 +16,9 @@ class InspectorWindow(QMainWindow):
                 embeddings,
                 self.statusBar()),
             "Similarity")
+
+        self.ui.tabWidget.addTab(
+            AnalogyWidget(
+                embeddings,
+                self.statusBar()),
+            "Analogy")

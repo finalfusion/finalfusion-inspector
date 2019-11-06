@@ -43,6 +43,8 @@ class Ui_SimilarityWidget(object):
         self.similarView.setAlternatingRowColors(True)
         self.similarView.setSelectionMode(
             QtWidgets.QAbstractItemView.SingleSelection)
+        self.similarView.setSelectionBehavior(
+            QtWidgets.QAbstractItemView.SelectRows)
         self.similarView.setObjectName("similarView")
         self.verticalLayout_2.addWidget(self.similarView)
         self.verticalLayout.addWidget(self.groupBox_2)
