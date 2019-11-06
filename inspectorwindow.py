@@ -54,7 +54,6 @@ class InspectorWindow(QMainWindow):
 
         self.similarityModel.query(word)
 
-
     @property
     def similarityModel(self):
         return self._similarityModel

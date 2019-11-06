@@ -3,6 +3,7 @@
 import argparse
 import sys
 
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 import finalfusion
 
@@ -24,6 +25,7 @@ if __name__ == "__main__":
         print("Cannot load embeddings from %s: %s" % (args.embeddings, e))
         sys.exit(1)
 
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling)
     app = QApplication(sys.argv)
     window = InspectorWindow(embeddings)
     window.show()

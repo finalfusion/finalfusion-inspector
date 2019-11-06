@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_InspectorWindow(object):
     def setupUi(self, InspectorWindow):
         InspectorWindow.setObjectName("InspectorWindow")
-        InspectorWindow.resize(800, 600)
+        InspectorWindow.resize(600, 800)
         self.centralwidget = QtWidgets.QWidget(InspectorWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -50,7 +50,7 @@ class Ui_InspectorWindow(object):
         self.verticalLayout.addWidget(self.groupBox_2)
         InspectorWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(InspectorWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 600, 24))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
