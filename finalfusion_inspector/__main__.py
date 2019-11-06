@@ -7,7 +7,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication
 import finalfusion
 
-from inspectorwindow import InspectorWindow
+from finalfusion_inspector.inspectorwindow import InspectorWindow
 
 
 parser = argparse.ArgumentParser(description='Inspect finalfusion embeddings.')
@@ -16,7 +16,8 @@ parser.add_argument(
     metavar='EMBEDS',
     help='the embeddings to inspect')
 
-if __name__ == "__main__":
+
+def main():
     args = parser.parse_args()
 
     try:
@@ -31,3 +32,7 @@ if __name__ == "__main__":
     window.show()
 
     sys.exit(app.exec_())
+
+
+if __name__ == "__main__":
+    main()

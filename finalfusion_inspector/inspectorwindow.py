@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow
 
-from ui_inspectorwindow import Ui_InspectorWindow
-from similarity import AnalogyWidget, SimilarityWidget
+from finalfusion_inspector.ui_inspectorwindow import Ui_InspectorWindow
+from finalfusion_inspector.similarity import AnalogyWidget, SimilarityWidget
 
 
 class InspectorWindow(QMainWindow):

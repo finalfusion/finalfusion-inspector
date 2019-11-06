@@ -5,9 +5,9 @@ from PyQt5.QtCore import QAbstractItemModel, QVariant, Qt
 from PyQt5.QtWidgets import QHeaderView, QWidget
 
 
-from ui_analogywidget import Ui_AnalogyWidget
-from ui_similaritywidget import Ui_SimilarityWidget
-from validators import QueryValidator, applyValidityColor
+from finalfusion_inspector.ui_analogywidget import Ui_AnalogyWidget
+from finalfusion_inspector.ui_similaritywidget import Ui_SimilarityWidget
+from finalfusion_inspector.validators import QueryValidator, applyValidityColor
 
 
 class WordStatus(Enum):
