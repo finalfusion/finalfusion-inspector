@@ -8,6 +8,10 @@ class SimilarityModel(QAbstractItemModel):
         self._embeddings = embeddings
         self._similarities = []
 
+    def clear(self):
+        self._similarities = []
+        self.layoutChanged.emit()
+
     def columnCount(self, parent):
         return 2
 

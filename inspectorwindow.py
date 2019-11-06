@@ -18,27 +18,42 @@ class InspectorWindow(QMainWindow):
         self.ui.similarView.setModel(self.similarityModel)
         self.ui.similarView.horizontalHeader() \
                            .setSectionResizeMode(QHeaderView.Stretch)
-        self.ui.queryPushButton.clicked.connect(self.query)
-        self.ui.queryLineEdit.returnPressed.connect(self.query)
 
+        self.ui.queryPushButton.setEnabled(False)
+        self.ui.queryPushButton.clicked.connect(self.querySubmitted)
+
+        self.ui.queryLineEdit.returnPressed.connect(self.querySubmitted)
+        self.ui.queryLineEdit.textChanged.connect(self.queryChanged)
+
+    @property
     def query(self):
-        # XXX: this method and called methods are not prepared for
-        #      returning None yet.
+        return self.ui.queryLineEdit.text().strip()
 
-        word = self.ui.queryLineEdit.text()
-        print("'%s'" % word)
+    def queryChanged(self):
+        self.ui.queryPushButton.setEnabled(len(self.query) != 0)
+
+    def querySubmitted(self):
+        word = self.query
+        if len(word) == 0:
+            return
+
+        self.similarityModel.clear()
 
         # Figure out whether the word is unknown. Checking whether
         # there are multiple indices is not good enough, since short
         # words may only have one n-gram. So we check if the first
         # index is in the range of the vocab.
         indices = self._embeddings.vocab().item_to_indices(word)
-        if len(indices) > 0 and indices[0] < len(self._embeddings.vocab()):
+        if indices is None or len(indices) == 0:
+            self.statusBar().showMessage("%s is out of the vocabulary and a subword lookup was not possible" % word)
+            return
+        elif indices[0] < len(self._embeddings.vocab()):
             self.statusBar().showMessage("%s is in the vocabulary" % word)
         else:
             self.statusBar().showMessage("%s is out of vocabulary" % word)
 
         self.similarityModel.query(word)
+
 
     @property
     def similarityModel(self):
