@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-from PyQt5.QtCore import QAbstractItemModel, QVariant, Qt
+from PyQt5.QtCore import QAbstractItemModel, QVariant, Qt, pyqtSignal
 from PyQt5.QtWidgets import QHeaderView, QWidget
 
 
@@ -84,6 +84,9 @@ class AnalogyWidget(QWidget):
 
 
 class SimilarityModel(QAbstractItemModel):
+    # This signal is emitted when the underlying embeddings have changed.
+    changed = pyqtSignal()
+
     def __init__(self, embeddings):
         super(SimilarityModel, self).__init__()
 
@@ -131,6 +134,11 @@ class SimilarityModel(QAbstractItemModel):
 
     def rowCount(self, index):
         return len(self.similarities)
+
+    def switchEmbeddings(self, embeddings):
+        self._embeddings = embeddings
+        self.clear()
+        self.changed.emit()
 
     @property
     def similarities(self):

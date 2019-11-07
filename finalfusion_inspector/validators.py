@@ -40,15 +40,19 @@ def is_vocab_word(model, word):
 
 
 class QueryValidator(QValidator):
-    def __init__(self, vocab):
+    def __init__(self, model):
         super(QueryValidator, self).__init__()
-        self._vocab = vocab
+        self._model = model
+        self.model.changed.connect(self.modelChanged)
+
+    def modelChanged(self):
+        self.changed.emit()
 
     def word_status(self, input_):
-        return is_vocab_word(self.vocab, input_)
+        return is_vocab_word(self.model, input_)
 
     def validate(self, input_, pos):
-        wordStatus = is_vocab_word(self.vocab, input_)
+        wordStatus = is_vocab_word(self.model, input_)
 
         if wordStatus == WordStatus.KNOWN:
             return (QValidator.Acceptable, input_, pos)
@@ -58,5 +62,5 @@ class QueryValidator(QValidator):
             return (QValidator.Intermediate, input_, pos)
 
     @property
-    def vocab(self):
-        return self._vocab
+    def model(self):
+        return self._model

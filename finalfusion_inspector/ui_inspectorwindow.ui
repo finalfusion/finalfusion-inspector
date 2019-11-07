@@ -37,12 +37,18 @@
     <property name="title">
      <string>&amp;File</string>
     </property>
-    <addaction name="actionQuit"/>
+    <addaction name="openAction"/>
+    <addaction name="separator"/>
+    <addaction name="quitAction"/>
    </widget>
    <addaction name="menuFile"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionQuit">
+  <action name="quitAction">
+   <property name="icon">
+    <iconset theme="application-exit">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
    <property name="text">
     <string>&amp;Quit</string>
    </property>
@@ -50,11 +56,23 @@
     <string>Ctrl+Q</string>
    </property>
   </action>
+  <action name="openAction">
+   <property name="icon">
+    <iconset theme="document-open">
+     <normaloff>.</normaloff>.</iconset>
+   </property>
+   <property name="text">
+    <string>&amp;Open embeddings…</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections>
   <connection>
-   <sender>actionQuit</sender>
+   <sender>quitAction</sender>
    <signal>triggered()</signal>
    <receiver>InspectorWindow</receiver>
    <slot>close()</slot>

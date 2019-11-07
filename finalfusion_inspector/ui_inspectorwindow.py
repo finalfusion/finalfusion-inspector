@@ -31,22 +31,29 @@ class Ui_InspectorWindow(object):
         self.statusbar = QtWidgets.QStatusBar(InspectorWindow)
         self.statusbar.setObjectName("statusbar")
         InspectorWindow.setStatusBar(self.statusbar)
-        self.actionQuit = QtWidgets.QAction(InspectorWindow)
-        self.actionQuit.setObjectName("actionQuit")
-        self.menuFile.addAction(self.actionQuit)
+        self.quitAction = QtWidgets.QAction(InspectorWindow)
+        icon = QtGui.QIcon.fromTheme("application-exit")
+        self.quitAction.setIcon(icon)
+        self.quitAction.setObjectName("quitAction")
+        self.openAction = QtWidgets.QAction(InspectorWindow)
+        icon = QtGui.QIcon.fromTheme("document-open")
+        self.openAction.setIcon(icon)
+        self.openAction.setObjectName("openAction")
+        self.menuFile.addAction(self.openAction)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.quitAction)
         self.menubar.addAction(self.menuFile.menuAction())
 
         self.retranslateUi(InspectorWindow)
         self.tabWidget.setCurrentIndex(-1)
-        self.actionQuit.triggered.connect(InspectorWindow.close)
+        self.quitAction.triggered.connect(InspectorWindow.close)
         QtCore.QMetaObject.connectSlotsByName(InspectorWindow)
 
     def retranslateUi(self, InspectorWindow):
         _translate = QtCore.QCoreApplication.translate
-        InspectorWindow.setWindowTitle(
-            _translate(
-                "InspectorWindow",
-                "finalfusion inspector"))
+        InspectorWindow.setWindowTitle(_translate("InspectorWindow", "finalfusion inspector"))
         self.menuFile.setTitle(_translate("InspectorWindow", "&File"))
-        self.actionQuit.setText(_translate("InspectorWindow", "&Quit"))
-        self.actionQuit.setShortcut(_translate("InspectorWindow", "Ctrl+Q"))
+        self.quitAction.setText(_translate("InspectorWindow", "&Quit"))
+        self.quitAction.setShortcut(_translate("InspectorWindow", "Ctrl+Q"))
+        self.openAction.setText(_translate("InspectorWindow", "&Open embeddings…"))
+        self.openAction.setShortcut(_translate("InspectorWindow", "Ctrl+O"))
