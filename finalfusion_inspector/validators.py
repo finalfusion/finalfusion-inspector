@@ -22,12 +22,13 @@ def applyValidityColor(sender):
     sender.setStyleSheet(style)
 
 
-def is_vocab_word(vocab, word):
+def is_vocab_word(model, word):
+    vocab = model.embeddings.vocab()
+
     # Figure out whether the word is unknown. Checking whether
     # there are multiple indices is not good enough, since short
     # words may only have one n-gram. So we check if the first
     # index is in the range of the vocab.
-
     indices = vocab.item_to_indices(word)
 
     if indices is None or len(indices) == 0:

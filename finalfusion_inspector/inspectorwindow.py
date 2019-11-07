@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow
 
 from finalfusion_inspector.ui_inspectorwindow import Ui_InspectorWindow
-from finalfusion_inspector.similarity import AnalogyWidget, SimilarityWidget
+from finalfusion_inspector.similarity import AnalogyWidget, SimilarityModel, SimilarityWidget
 
 
 class InspectorWindow(QMainWindow):
@@ -13,12 +13,10 @@ class InspectorWindow(QMainWindow):
 
         self.ui.tabWidget.addTab(
             SimilarityWidget(
-                embeddings,
-                self.statusBar()),
+                SimilarityModel(embeddings)),
             "Similarity")
 
         self.ui.tabWidget.addTab(
             AnalogyWidget(
-                embeddings,
-                self.statusBar()),
+                SimilarityModel(embeddings)),
             "Analogy")

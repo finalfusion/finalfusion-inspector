@@ -33,18 +33,15 @@ def is_vocab_word(vocab, word):
 
 
 class AnalogyWidget(QWidget):
-    def __init__(self, embeddings, statusBar):
+    def __init__(self, model):
         super(AnalogyWidget, self).__init__()
+
+        self._model = model
 
         self.ui = Ui_AnalogyWidget()
         self.ui.setupUi(self)
 
-        self._embeddings = embeddings
-        self._statusBar = statusBar
-
-        self._similarityModel = SimilarityModel(self._embeddings)
-
-        self.ui.similarView.setModel(self.similarityModel)
+        self.ui.similarView.setModel(self.model)
         self.ui.similarView.horizontalHeader() \
                            .setSectionResizeMode(QHeaderView.Stretch)
 
@@ -56,7 +53,7 @@ class AnalogyWidget(QWidget):
             self.ui.analogy2Edit,
             self.ui.analogy3Edit]
         for edit in self._edits:
-            edit.setValidator(QueryValidator(self._embeddings.vocab()))
+            edit.setValidator(QueryValidator(self.model))
             edit.textChanged.connect(self.applyValidityColor)
             edit.returnPressed.connect(self.querySubmitted)
             edit.textChanged.connect(self.queryChanged)
@@ -77,13 +74,13 @@ class AnalogyWidget(QWidget):
         if not allValid:
             return
 
-        self.similarityModel.clear()
+        self.model.clear()
 
-        self.similarityModel.analogyQuery(self.query())
+        self.model.analogyQuery(self.query())
 
     @property
-    def similarityModel(self):
-        return self._similarityModel
+    def model(self):
+        return self._model
 
 
 class SimilarityModel(QAbstractItemModel):
@@ -145,18 +142,15 @@ class SimilarityModel(QAbstractItemModel):
 
 
 class SimilarityWidget(QWidget):
-    def __init__(self, embeddings, statusBar):
+    def __init__(self, model):
         super(SimilarityWidget, self).__init__()
+
+        self._model = model
 
         self.ui = Ui_SimilarityWidget()
         self.ui.setupUi(self)
 
-        self._embeddings = embeddings
-        self._statusBar = statusBar
-
-        self._similarityModel = SimilarityModel(self._embeddings)
-
-        self.ui.similarView.setModel(self.similarityModel)
+        self.ui.similarView.setModel(self.model)
         self.ui.similarView.horizontalHeader() \
                            .setSectionResizeMode(QHeaderView.Stretch)
 
@@ -164,7 +158,7 @@ class SimilarityWidget(QWidget):
         self.ui.queryPushButton.clicked.connect(self.querySubmitted)
 
         self.ui.queryLineEdit.setValidator(
-            QueryValidator(self._embeddings.vocab()))
+            QueryValidator(self.model))
         self.ui.queryLineEdit.textChanged.connect(self.applyValidityColor)
         self.ui.queryLineEdit.returnPressed.connect(self.querySubmitted)
         self.ui.queryLineEdit.textChanged.connect(self.queryChanged)
@@ -185,10 +179,10 @@ class SimilarityWidget(QWidget):
         if not self.ui.queryLineEdit.hasAcceptableInput():
             return
 
-        self.similarityModel.clear()
+        self.model.clear()
 
-        self.similarityModel.query(self.query)
+        self.model.query(self.query)
 
     @property
-    def similarityModel(self):
-        return self._similarityModel
+    def model(self):
+        return self._model
