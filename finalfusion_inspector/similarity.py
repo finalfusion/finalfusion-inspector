@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-from PyQt5.QtCore import QAbstractItemModel, QVariant, Qt, pyqtSignal
+from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QVariant, Qt, pyqtSignal
 from PyQt5.QtWidgets import QHeaderView, QWidget
 
 
@@ -131,6 +131,9 @@ class SimilarityModel(QAbstractItemModel):
 
     def index(self, row, column, parent):
         return self.createIndex(row, column)
+
+    def parent(self, index):
+        return QModelIndex()
 
     def rowCount(self, index):
         return len(self.similarities)
