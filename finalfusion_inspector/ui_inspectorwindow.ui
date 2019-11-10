@@ -38,6 +38,7 @@
      <string>&amp;File</string>
     </property>
     <addaction name="openAction"/>
+    <addaction name="metadataAction"/>
     <addaction name="separator"/>
     <addaction name="quitAction"/>
    </widget>
@@ -66,6 +67,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="metadataAction">
+   <property name="text">
+    <string>Metadata…</string>
    </property>
   </action>
  </widget>

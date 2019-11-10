@@ -20,6 +20,7 @@ setup(
     },
     install_requires=[
         'finalfusion == 0.5.*',
-        'PyQt5 >= 5.13'
+        'PyQt5 >= 5.13',
+        'toml == 0.10.*'
     ],
 )

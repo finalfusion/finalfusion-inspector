@@ -14,6 +14,7 @@ in mkShell {
     finalfusion.python3Packages.finalfusion
     python3Packages.pyqt5
     python3Packages.setuptools
+    python3Packages.toml
   ];
 
   # Normally set by the wrapper, but we can't use it in nix-shell (?).
