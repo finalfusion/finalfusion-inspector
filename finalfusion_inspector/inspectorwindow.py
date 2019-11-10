@@ -2,6 +2,7 @@ import finalfusion
 from PyQt5.QtWidgets import QFileDialog, QMessageBox, QMainWindow
 
 from finalfusion_inspector.ui_inspectorwindow import Ui_InspectorWindow
+from finalfusion_inspector.metadata import MetadataDialog, MetadataModel
 from finalfusion_inspector.similarity import AnalogyWidget, SimilarityModel, SimilarityWidget
 
 
@@ -12,21 +13,28 @@ class InspectorWindow(QMainWindow):
         self.ui = Ui_InspectorWindow()
         self.ui.setupUi(self)
 
-        self._tabWidgets = [SimilarityWidget(SimilarityModel(embeddings)), AnalogyWidget(SimilarityModel(embeddings))]
+        self._modelBackedWidgets = [
+            SimilarityWidget(
+                SimilarityModel(embeddings)), AnalogyWidget(
+                SimilarityModel(embeddings))]
 
         self.ui.tabWidget.addTab(
-            self.tabWidgets[0],
+            self.modelBackedWidgets[0],
             "Similarity")
 
         self.ui.tabWidget.addTab(
-            self.tabWidgets[1],
+            self.modelBackedWidgets[1],
             "Analogy")
 
+        self._metadataDialog = MetadataDialog(MetadataModel(embeddings))
+        self._modelBackedWidgets.append(self._metadataDialog)
+
         self.ui.openAction.triggered.connect(self.openEmbeddings)
+        self.ui.metadataAction.triggered.connect(self.showMetadata)
 
     @property
-    def tabWidgets(self):
-        return self._tabWidgets
+    def modelBackedWidgets(self):
+        return self._modelBackedWidgets
 
     def openEmbeddings(self):
         embeddingsFile, _ = QFileDialog.getOpenFileName(self,
@@ -48,5 +56,8 @@ class InspectorWindow(QMainWindow):
             return
 
         # Switch to the newly-loaded embeddings.
-        for widget in self.tabWidgets:
+        for widget in self.modelBackedWidgets:
             widget.model.switchEmbeddings(embeddings)
+
+    def showMetadata(self):
+        self._metadataDialog.exec_()
