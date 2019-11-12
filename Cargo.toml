@@ -1,0 +1,13 @@
+[package]
+name = "finalfusion-inspector"
+version = "0.1.0"
+authors = ["Daniël de Kok <me@danieldk.eu>"]
+edition = "2018"
+
+[dependencies.gtk]
+version = "0.7"
+features = ["v3_16"]
+
+[dependencies.gio]
+version = ""
+features = ["v2_44"]
