@@ -49,6 +49,7 @@
                         <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
                         <accelerator key="q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
@@ -65,28 +66,9 @@
           </packing>
         </child>
         <child>
-          <object class="GtkNotebook">
+          <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <child>
-              <object class="GtkTreeView">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection"/>
-                </child>
-              </object>
-            </child>
-            <child type="tab">
-              <object class="GtkLabel">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">page 1</property>
-              </object>
-              <packing>
-                <property name="tab_fill">False</property>
-              </packing>
-            </child>
           </object>
           <packing>
             <property name="expand">True</property>

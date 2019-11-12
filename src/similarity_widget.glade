@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.1 -->
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <object class="GtkBox" id="similarityWidget">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="border_width">5</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">5</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">5</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="label" translatable="yes">Query:</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="queryEntry">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkImage" id="statusImage">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="icon_name">face-angel-symbolic</property>
+            <property name="icon_size">3</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="queryButton">
+            <property name="label" translatable="yes">Search</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkTreeView" id="similarityView">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="headers_clickable">False</property>
+        <child internal-child="selection">
+          <object class="GtkTreeSelection"/>
+        </child>
+        <child>
+          <object class="GtkTreeViewColumn">
+            <property name="title" translatable="yes">Word</property>
+            <property name="expand">True</property>
+            <child>
+              <object class="GtkCellRendererText"/>
+              <attributes>
+                <attribute name="text">0</attribute>
+              </attributes>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkTreeViewColumn">
+            <property name="title" translatable="yes">Similarity</property>
+            <child>
+              <object class="GtkCellRendererText"/>
+              <attributes>
+                <attribute name="text">1</attribute>
+              </attributes>
+            </child>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+  </object>
+</interface>
