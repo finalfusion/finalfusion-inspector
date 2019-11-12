@@ -3,15 +3,15 @@ use gtk::prelude::*;
 
 use std::env::args;
 
+#[macro_use]
+pub mod clone;
+
+mod inspector_window;
+use inspector_window::InspectorWindow;
+
 fn build_ui(application: &gtk::Application) {
-    let window = gtk::ApplicationWindow::new(application);
-
-    window.set_title("finalfusion inspector");
-    window.set_border_width(10);
-    window.set_position(gtk::WindowPosition::Center);
-    window.set_default_size(600, 800);
-
-    window.show_all();
+    let window = InspectorWindow::new(application);
+    window.window().show_all();
 }
 
 fn main() {
