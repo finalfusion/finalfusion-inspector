@@ -17,6 +17,11 @@ pub use analogy_widget::AnalogyWidget;
 mod inspector_window;
 pub use inspector_window::InspectorWindow;
 
+mod metadata_dialog;
+pub use metadata_dialog::MetadataDialog;
+
+pub mod metadata_model;
+
 pub mod model;
 
 pub mod similarity;
