@@ -5,6 +5,8 @@ use gtk::prelude::*;
 use gtk::{ApplicationWindow, Builder, Label, MenuItem, Notebook, Widget};
 
 use crate::analogy_widget::AnalogyWidget;
+use crate::metadata_dialog::MetadataDialog;
+use crate::metadata_model::MetadataModel;
 use crate::similarity::SimilarityModel;
 use crate::SimilarityWidget;
 
@@ -38,12 +40,27 @@ impl InspectorWindow {
             similarity_widget.widget().upcast::<Widget>(),
         );
 
-        let analogy_widget = AnalogyWidget::new(SimilarityModel::new(embeddings));
+        let analogy_widget = AnalogyWidget::new(SimilarityModel::new(embeddings.clone()));
         Self::create_tab(
             &mut notebook,
             "Analogy",
             analogy_widget.widget().upcast::<Widget>(),
         );
+
+        let metadata_dialog = MetadataDialog::new(MetadataModel::new(embeddings));
+        metadata_dialog.dialog().set_transient_for(Some(&window));
+        metadata_dialog.dialog().connect_delete_event(|dialog, _| {
+            dialog.hide();
+            Inhibit(true)
+        });
+
+        let metadata_item: MenuItem = builder
+            .get_object("metadataItem")
+            .expect("Glade source is missing metadataItem");
+        metadata_item.connect_activate(move |_| {
+            metadata_dialog.dialog().run();
+            metadata_dialog.dialog().hide();
+        });
 
         let quit_item: MenuItem = builder
             .get_object("quitItem")
