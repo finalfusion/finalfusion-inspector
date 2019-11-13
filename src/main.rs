@@ -1,11 +1,17 @@
 use std::fs::File;
 use std::io::BufReader;
+use std::path::PathBuf;
+use std::process;
 use std::rc::Rc;
 
 use clap::{App, AppSettings, Arg};
 use finalfusion::prelude::*;
 use gio::prelude::*;
 use gtk::prelude::*;
+use gtk::{
+    ButtonsType, DialogFlags, FileChooserAction, FileChooserDialog, FileFilter, MessageDialog,
+    MessageType, ResponseType, Window,
+};
 use stdinout::OrExit;
 
 #[macro_use]
@@ -36,6 +42,80 @@ static DEFAULT_CLAP_SETTINGS: &[AppSettings] = &[
     AppSettings::UnifiedHelpMessage,
 ];
 
+fn show_error(msg: impl AsRef<str>) {
+    let dialog = MessageDialog::new::<Window>(
+        None,
+        DialogFlags::empty(),
+        MessageType::Error,
+        ButtonsType::Ok,
+        msg.as_ref(),
+    );
+
+    dialog.run();
+    dialog.destroy();
+}
+
+fn open_dialog() -> Option<PathBuf> {
+    let dialog = FileChooserDialog::with_buttons::<Window>(
+        Some("Open File"),
+        None,
+        FileChooserAction::Open,
+        &[
+            ("_Cancel", ResponseType::Cancel),
+            ("_Open", ResponseType::Accept),
+        ],
+    );
+
+    let filter = FileFilter::new();
+    filter.set_name(Some("finalfusion embeddings"));
+    filter.add_pattern("*.fifu");
+
+    dialog.add_filter(&filter);
+
+    let response = dialog.run();
+
+    let filename = match response {
+        ResponseType::Accept => dialog.get_filename(),
+        ResponseType::Cancel => None,
+        ResponseType::DeleteEvent => None,
+        _ => unreachable!(),
+    };
+
+    dialog.destroy();
+
+    filename
+}
+
+fn open_embeddings(
+    filename: Option<&str>,
+) -> Result<Embeddings<VocabWrap, StorageViewWrap>, std::io::Error> {
+    let filename = filename
+        .map(Into::into)
+        .or_else(open_dialog)
+        .unwrap_or_else(|| process::exit(1));
+
+    let file = File::open(&filename).unwrap_or_else(|err| {
+        show_error(format!(
+            "Cannot open {}: {}",
+            filename.to_string_lossy(),
+            err
+        ));
+        process::exit(1);
+    });
+
+    let embeddings: Embeddings<VocabWrap, StorageViewWrap> =
+        Embeddings::mmap_embeddings(&mut BufReader::new(file)).unwrap_or_else(|err| {
+            show_error(format!(
+                "Cannot read {}: {}",
+                filename.to_string_lossy(),
+                err
+            ));
+            process::exit(1);
+        });
+
+    Ok(embeddings)
+}
+
 fn build_ui(
     application: &gtk::Application,
     embeddings: Rc<Embeddings<VocabWrap, StorageViewWrap>>,
@@ -47,30 +127,16 @@ fn build_ui(
 fn main() {
     let app = App::new("finalfusion-inspector")
         .settings(DEFAULT_CLAP_SETTINGS)
-        .arg(
-            Arg::with_name(EMBEDDINGS)
-                .help("Embedding file")
-                .index(1)
-                .required(true),
-        );
+        .arg(Arg::with_name(EMBEDDINGS).help("Embedding file").index(1));
 
     let matches = app.get_matches();
-    let embeddings_filename = matches.value_of(EMBEDDINGS).unwrap();
 
     let application =
         gtk::Application::new(Some("com.github.finalfusion.inspector"), Default::default())
             .expect("Initialization failed...");
 
-    let mut read = BufReader::new(File::open(embeddings_filename).or_exit(
-        format!("Cannot read embeddings from {}", embeddings_filename),
-        1,
-    ));
-    let embeddings: Embeddings<VocabWrap, StorageViewWrap> = Embeddings::mmap_embeddings(&mut read)
-        .or_exit(
-            format!("Cannot read embeddings from {}", embeddings_filename),
-            1,
-        );
-    let embeddings = Rc::new(embeddings);
+    let embeddings =
+        Rc::new(open_embeddings(matches.value_of(EMBEDDINGS)).or_exit("Cannot read embeddings", 1));
 
     application.connect_activate(move |app| {
         build_ui(app, embeddings.clone());
