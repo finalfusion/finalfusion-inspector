@@ -1,0 +1,7 @@
+# Rust files
+target/
+*.bk
+
+# Editor files
+*~
+.*
