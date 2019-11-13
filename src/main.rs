@@ -11,6 +11,9 @@ use stdinout::OrExit;
 #[macro_use]
 pub mod clone;
 
+mod analogy_widget;
+pub use analogy_widget::AnalogyWidget;
+
 mod inspector_window;
 pub use inspector_window::InspectorWindow;
 

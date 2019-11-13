@@ -4,6 +4,7 @@ use finalfusion::prelude::*;
 use gtk::prelude::*;
 use gtk::{ApplicationWindow, Builder, Label, MenuItem, Notebook, Widget};
 
+use crate::analogy_widget::AnalogyWidget;
 use crate::similarity::SimilarityModel;
 use crate::SimilarityWidget;
 
@@ -28,13 +29,20 @@ impl InspectorWindow {
             .get_object("notebook")
             .expect("Glade source is missing notebook");
 
-        let similarity_model = SimilarityModel::new(embeddings);
+        let similarity_model = SimilarityModel::new(embeddings.clone());
 
         let similarity_widget = SimilarityWidget::new(similarity_model);
         Self::create_tab(
             &mut notebook,
             "Similarity",
             similarity_widget.widget().upcast::<Widget>(),
+        );
+
+        let analogy_widget = AnalogyWidget::new(SimilarityModel::new(embeddings));
+        Self::create_tab(
+            &mut notebook,
+            "Analogy",
+            analogy_widget.widget().upcast::<Widget>(),
         );
 
         let quit_item: MenuItem = builder

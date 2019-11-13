@@ -5,7 +5,7 @@ use finalfusion::similarity::WordSimilarity;
 use gtk::prelude::*;
 use gtk::ListStore;
 
-use crate::model::EmbeddingsModel;
+use crate::model::{EmbeddingsExt, EmbeddingsModel};
 
 pub struct SimilarityModel {
     embeddings: Rc<Embeddings<VocabWrap, StorageViewWrap>>,
@@ -19,6 +19,23 @@ impl SimilarityModel {
         SimilarityModel {
             embeddings,
             inner: model,
+        }
+    }
+
+    /// Execute an analogy query.
+    pub fn analogy(&self, query: [impl AsRef<str>; 3]) {
+        self.clear();
+
+        // Unwrapping should be safe here, since we only allow words for
+        // which an embedding can be computed.
+        let similar_words = self.embeddings.analogy_flexible(query, 20).unwrap();
+
+        for similar_word in similar_words {
+            self.inner.insert_with_values(
+                None,
+                &[0, 1],
+                &[&similar_word.word, &similar_word.similarity.into_inner()],
+            );
         }
     }
 
