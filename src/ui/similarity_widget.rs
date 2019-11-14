@@ -3,8 +3,9 @@ use std::rc::Rc;
 use gtk::prelude::*;
 use gtk::{Box, Builder, Button, Entry, IconSize, Image, TreeView};
 
-use crate::embeddings_ext::{EmbeddingsExt, WordStatus};
+use crate::embeddings_ext::WordStatus;
 use crate::models::{EmbeddingsModel, SimilarityModel};
+use crate::ui::EmbeddingsWidget;
 
 pub struct SimilarityWidget {
     button: Button,
@@ -55,7 +56,7 @@ impl SimilarityWidget {
             .connect_changed(clone!(widget => move |_| widget.update_validity()));
 
         entry.connect_activate(clone!(entry, model, widget => move |_| {
-            if model.embeddings().word_status(&widget.query()).is_valid() {
+            if model.word_status(&widget.query()).is_valid() {
         model.similarity(&entry.get_buffer().get_text());
             }
         }));
@@ -73,8 +74,18 @@ impl SimilarityWidget {
         self.entry.get_buffer().get_text()
     }
 
+    pub fn widget(&self) -> Box {
+        self.inner.clone()
+    }
+}
+
+impl EmbeddingsWidget for SimilarityWidget {
+    fn model(&self) -> &dyn EmbeddingsModel {
+        &*self.model
+    }
+
     fn update_validity(&self) {
-        let status = self.model.embeddings().word_status(&self.query());
+        let status = self.model.word_status(&self.query());
         self.button.set_sensitive(status.is_valid());
 
         let icon_name = match status {
@@ -85,9 +96,5 @@ impl SimilarityWidget {
 
         self.status_image
             .set_from_icon_name(Some(icon_name), IconSize::LargeToolbar);
-    }
-
-    pub fn widget(&self) -> Box {
-        self.inner.clone()
     }
 }

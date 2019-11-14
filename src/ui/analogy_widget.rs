@@ -3,8 +3,9 @@ use std::rc::Rc;
 use gtk::prelude::*;
 use gtk::{Box, Builder, Button, Entry, IconSize, Image, TreeView};
 
-use crate::embeddings_ext::{EmbeddingsExt, WordStatus};
+use crate::embeddings_ext::WordStatus;
 use crate::models::{EmbeddingsModel, SimilarityModel};
+use crate::ui::EmbeddingsWidget;
 
 struct AnalogyEntry {
     entry: Entry,
@@ -109,7 +110,7 @@ impl AnalogyWidget {
     fn all_valid(&self) -> bool {
         self.entries.iter().all(|e| {
             let query = e.entry.get_buffer().get_text();
-            self.model.embeddings().word_status(&query).is_valid()
+            self.model.word_status(&query).is_valid()
         })
     }
 
@@ -121,12 +122,26 @@ impl AnalogyWidget {
         ]
     }
 
+    pub fn widget(&self) -> Box {
+        self.inner.clone()
+    }
+}
+
+impl EmbeddingsWidget for AnalogyWidget {
+    fn model(&self) -> &dyn EmbeddingsModel {
+        &*self.model
+    }
+
     fn update_validity(&self) {
+        let mut all_valid = true;
+
         for entry in &self.entries {
             let query = entry.entry.get_buffer().get_text();
 
-            let status = self.model.embeddings().word_status(&query);
-            self.button.set_sensitive(status.is_valid());
+            let status = self.model.word_status(&query);
+            if !status.is_valid() {
+                all_valid = false;
+            }
 
             let icon_name = match status {
                 WordStatus::Known => "face-angel-symbolic",
@@ -138,9 +153,7 @@ impl AnalogyWidget {
                 .status
                 .set_from_icon_name(Some(icon_name), IconSize::LargeToolbar);
         }
-    }
 
-    pub fn widget(&self) -> Box {
-        self.inner.clone()
+        self.button.set_sensitive(all_valid);
     }
 }

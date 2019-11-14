@@ -1,3 +1,4 @@
+use std::cell::RefCell;
 use std::rc::Rc;
 
 use finalfusion::prelude::*;
@@ -5,11 +6,11 @@ use finalfusion::similarity::WordSimilarity;
 use gtk::prelude::*;
 use gtk::ListStore;
 
-use crate::embeddings_ext::EmbeddingsExt;
+use crate::embeddings_ext::{EmbeddingsExt, WordStatus};
 use crate::models::EmbeddingsModel;
 
 pub struct SimilarityModel {
-    embeddings: Rc<Embeddings<VocabWrap, StorageViewWrap>>,
+    embeddings: RefCell<Rc<Embeddings<VocabWrap, StorageViewWrap>>>,
     inner: ListStore,
 }
 
@@ -18,7 +19,7 @@ impl SimilarityModel {
         let model = ListStore::new(&[String::static_type(), f32::static_type()]);
 
         SimilarityModel {
-            embeddings,
+            embeddings: RefCell::new(embeddings),
             inner: model,
         }
     }
@@ -27,9 +28,11 @@ impl SimilarityModel {
     pub fn analogy(&self, query: [impl AsRef<str>; 3]) {
         self.clear();
 
+        let embeddings = self.embeddings.borrow();
+
         // Unwrapping should be safe here, since we only allow words for
         // which an embedding can be computed.
-        let similar_words = self.embeddings.analogy_flexible(query, 20).unwrap();
+        let similar_words = embeddings.analogy_flexible(query, 20).unwrap();
 
         for similar_word in similar_words {
             self.inner.insert_with_values(
@@ -49,7 +52,9 @@ impl SimilarityModel {
     pub fn similarity(&self, word: &str) {
         self.clear();
 
-        let similar_words = match self.embeddings.word_similarity(word, 20) {
+        let embeddings = self.embeddings.borrow();
+
+        let similar_words = match embeddings.word_similarity(word, 20) {
             Some(results) => results,
             None => return,
         };
@@ -69,7 +74,12 @@ impl SimilarityModel {
 }
 
 impl EmbeddingsModel for SimilarityModel {
-    fn embeddings(&self) -> &Embeddings<VocabWrap, StorageViewWrap> {
-        &self.embeddings
+    fn word_status(&self, word: &str) -> WordStatus {
+        self.embeddings.borrow().word_status(word)
+    }
+
+    fn switch_embeddings(&self, embeddings: Rc<Embeddings<VocabWrap, StorageViewWrap>>) {
+        self.clear();
+        *self.embeddings.borrow_mut() = embeddings;
     }
 }
