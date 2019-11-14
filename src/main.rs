@@ -17,23 +17,11 @@ use stdinout::OrExit;
 #[macro_use]
 pub mod clone;
 
-mod analogy_widget;
-pub use analogy_widget::AnalogyWidget;
+mod embeddings_ext;
 
-mod inspector_window;
-pub use inspector_window::InspectorWindow;
+pub mod models;
 
-mod metadata_dialog;
-pub use metadata_dialog::MetadataDialog;
-
-pub mod metadata_model;
-
-pub mod model;
-
-pub mod similarity_model;
-
-mod similarity_widget;
-pub use similarity_widget::SimilarityWidget;
+pub mod ui;
 
 static EMBEDDINGS: &str = "EMBEDDINGS";
 
@@ -120,7 +108,7 @@ fn build_ui(
     application: &gtk::Application,
     embeddings: Rc<Embeddings<VocabWrap, StorageViewWrap>>,
 ) {
-    let window = InspectorWindow::new(application, embeddings);
+    let window = ui::InspectorWindow::new(application, embeddings);
     window.window().show_all();
 }
 

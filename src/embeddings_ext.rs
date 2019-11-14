@@ -54,7 +54,3 @@ impl EmbeddingsExt for Embeddings<VocabWrap, StorageViewWrap> {
         }
     }
 }
-
-pub trait EmbeddingsModel {
-    fn embeddings(&self) -> &Embeddings<VocabWrap, StorageViewWrap>;
-}
