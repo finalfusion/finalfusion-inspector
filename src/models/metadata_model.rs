@@ -55,6 +55,7 @@ impl MetadataModel {
         for (key, value) in table {
             let value_string = match value {
                 Value::Float(val) => format!("{:.2e}", val),
+                Value::String(val) => val.clone(),
                 other => other.to_string(),
             };
             self.inner
