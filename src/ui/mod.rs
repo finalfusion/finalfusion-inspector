@@ -15,6 +15,9 @@ pub use self::metadata_dialog::MetadataDialog;
 mod similarity_widget;
 pub use self::similarity_widget::SimilarityWidget;
 
+mod subwords_widget;
+pub use self::subwords_widget::SubwordsWidget;
+
 pub trait EmbeddingsWidget {
     fn model(&self) -> &dyn EmbeddingsModel;
 
