@@ -3,8 +3,8 @@ use std::rc::Rc;
 use gtk::prelude::*;
 use gtk::{Box, Builder, Button, Entry, IconSize, Image, TreeView};
 
-use crate::model::{EmbeddingsExt, EmbeddingsModel, WordStatus};
-use crate::similarity_model::SimilarityModel;
+use crate::embeddings_ext::{EmbeddingsExt, WordStatus};
+use crate::models::{EmbeddingsModel, SimilarityModel};
 
 struct AnalogyEntry {
     entry: Entry,

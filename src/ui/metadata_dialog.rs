@@ -3,7 +3,7 @@ use std::rc::Rc;
 use gtk::prelude::*;
 use gtk::{Builder, Dialog, TreeView};
 
-use crate::metadata_model::MetadataModel;
+use crate::models::MetadataModel;
 
 pub struct MetadataDialog {
     inner: Dialog,

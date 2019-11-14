@@ -4,11 +4,8 @@ use finalfusion::prelude::*;
 use gtk::prelude::*;
 use gtk::{ApplicationWindow, Builder, Label, MenuItem, Notebook, Widget};
 
-use crate::analogy_widget::AnalogyWidget;
-use crate::metadata_dialog::MetadataDialog;
-use crate::metadata_model::MetadataModel;
-use crate::similarity_model::SimilarityModel;
-use crate::SimilarityWidget;
+use crate::models::{MetadataModel, SimilarityModel};
+use crate::ui::{AnalogyWidget, MetadataDialog, SimilarityWidget};
 
 pub struct InspectorWindow {
     inner: ApplicationWindow,

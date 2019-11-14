@@ -5,7 +5,8 @@ use finalfusion::similarity::WordSimilarity;
 use gtk::prelude::*;
 use gtk::ListStore;
 
-use crate::model::{EmbeddingsExt, EmbeddingsModel};
+use crate::embeddings_ext::EmbeddingsExt;
+use crate::models::EmbeddingsModel;
 
 pub struct SimilarityModel {
     embeddings: Rc<Embeddings<VocabWrap, StorageViewWrap>>,
