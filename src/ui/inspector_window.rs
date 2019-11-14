@@ -6,9 +6,10 @@ use finalfusion::prelude::*;
 use gtk::prelude::*;
 use gtk::{ApplicationWindow, Builder, Label, MenuItem, Notebook, Widget};
 
-use crate::models::{MetadataModel, SimilarityModel};
+use crate::models::{MetadataModel, SimilarityModel, SubwordsModel};
 use crate::ui::{
     open_embeddings, show_error, AnalogyWidget, EmbeddingsWidget, MetadataDialog, SimilarityWidget,
+    SubwordsWidget,
 };
 
 pub struct InspectorWindow {
@@ -47,6 +48,13 @@ impl InspectorWindow {
             analogy_widget.widget().upcast::<Widget>(),
         );
 
+        let subwords_widget = SubwordsWidget::new(SubwordsModel::new(embeddings.clone()));
+        Self::create_tab(
+            &mut notebook,
+            "Subwords",
+            subwords_widget.widget().upcast::<Widget>(),
+        );
+
         let metadata_dialog = MetadataDialog::new(MetadataModel::new(embeddings));
         metadata_dialog.dialog().set_transient_for(Some(&window));
         metadata_dialog.dialog().connect_delete_event(|dialog, _| {
@@ -59,6 +67,7 @@ impl InspectorWindow {
             widgets: vec![
                 similarity_widget.clone(),
                 analogy_widget.clone(),
+                subwords_widget.clone(),
                 metadata_dialog.clone(),
             ],
         });
