@@ -30,7 +30,7 @@ pub mod metadata_model;
 
 pub mod model;
 
-pub mod similarity;
+pub mod similarity_model;
 
 mod similarity_widget;
 pub use similarity_widget::SimilarityWidget;

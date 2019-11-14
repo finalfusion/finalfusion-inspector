@@ -4,7 +4,7 @@ use gtk::prelude::*;
 use gtk::{Box, Builder, Button, Entry, IconSize, Image, TreeView};
 
 use crate::model::{EmbeddingsExt, EmbeddingsModel, WordStatus};
-use crate::similarity::SimilarityModel;
+use crate::similarity_model::SimilarityModel;
 
 struct AnalogyEntry {
     entry: Entry,

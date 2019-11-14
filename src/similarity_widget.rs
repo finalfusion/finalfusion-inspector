@@ -4,7 +4,7 @@ use gtk::prelude::*;
 use gtk::{Box, Builder, Button, Entry, IconSize, Image, TreeView};
 
 use crate::model::{EmbeddingsExt, EmbeddingsModel, WordStatus};
-use crate::similarity::SimilarityModel;
+use crate::similarity_model::SimilarityModel;
 
 pub struct SimilarityWidget {
     button: Button,
@@ -56,12 +56,12 @@ impl SimilarityWidget {
 
         entry.connect_activate(clone!(entry, model, widget => move |_| {
             if model.embeddings().word_status(&widget.query()).is_valid() {
-        model.query(&entry.get_buffer().get_text());
+        model.similarity(&entry.get_buffer().get_text());
             }
         }));
 
         button.connect_clicked(
-            clone!(entry, model => move |_| model.query(&entry.get_buffer().get_text())),
+            clone!(entry, model => move |_| model.similarity(&entry.get_buffer().get_text())),
         );
 
         widget.update_validity();

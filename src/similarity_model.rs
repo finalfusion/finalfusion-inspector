@@ -44,8 +44,8 @@ impl SimilarityModel {
         self.inner.clear();
     }
 
-    /// Execute a query.
-    pub fn query(&self, word: &str) {
+    /// Execute a similarity query.
+    pub fn similarity(&self, word: &str) {
         self.clear();
 
         let similar_words = match self.embeddings.word_similarity(word, 20) {
