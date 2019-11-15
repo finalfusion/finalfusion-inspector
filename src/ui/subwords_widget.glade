@@ -79,13 +79,17 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="headers_clickable">False</property>
+            <property name="enable_search">False</property>
             <child internal-child="selection">
               <object class="GtkTreeSelection"/>
             </child>
             <child>
               <object class="GtkTreeViewColumn">
+                <property name="resizable">True</property>
                 <property name="title" translatable="yes">Word</property>
                 <property name="expand">True</property>
+                <property name="sort_indicator">True</property>
+                <property name="sort_column_id">0</property>
                 <child>
                   <object class="GtkCellRendererText"/>
                   <attributes>
@@ -96,7 +100,10 @@
             </child>
             <child>
               <object class="GtkTreeViewColumn">
+                <property name="resizable">True</property>
                 <property name="title" translatable="yes">Similarity</property>
+                <property name="sort_indicator">True</property>
+                <property name="sort_column_id">1</property>
                 <child>
                   <object class="GtkCellRendererText"/>
                   <attributes>
