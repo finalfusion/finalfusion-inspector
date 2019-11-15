@@ -48,11 +48,15 @@ impl SubwordsModel {
         };
 
         for (ngram, idx) in ngram_indices {
-            self.inner.insert_with_values(
-                None,
-                &[0, 1],
-                &[&ngram, &idx.map(|idx| idx as i64).unwrap_or(-1)],
-            );
+            // There is no embedding for the n-gram if it does not
+            // have an index.
+            let idx = match idx {
+                Some(idx) => idx,
+                None => continue,
+            };
+
+            self.inner
+                .insert_with_values(None, &[0, 1], &[&ngram, &(idx as i64)]);
         }
     }
 
