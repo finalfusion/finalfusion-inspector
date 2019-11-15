@@ -4,8 +4,8 @@ let
   finalfusion = pkgs.callPackage (fetchFromGitHub {
     owner = "finalfusion";
     repo = "nix-packages";
-    rev = "94177ce11423a608af6969fcfafba323d89de16a";
-    sha256 = "1znhb79wj6ibrwa63nd3mm33k8s0a5s0ampcmfj8pajj41cfxdas";
+    rev = "a7fc91ec0336c04b0b51ba9c8c0a806427f96a42";
+    sha256 = "02dc1qz1zppi224jh0xlhc3k3qy3cpxcksp36c4cchcgfr0yz532";
   }) {};
 in mkShell {
   nativeBuildInputs = [ qt5.qttools.dev python3Packages.autopep8 python3Packages.flake8 ];
