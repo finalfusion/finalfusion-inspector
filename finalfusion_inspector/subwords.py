@@ -30,7 +30,13 @@ class SubwordsModel(QAbstractItemModel):
             if index.column() == 0:
                 return ngram
             elif index.column() == 1:
-                return ngram_index
+                return ngram_index - len(self.embeddings.vocab())
+        elif role == Qt.TextAlignmentRole:
+            print(index)
+            if index.column() == 1:
+                return Qt.AlignRight
+            else:
+                return QVariant()
 
     @property
     def embeddings(self):
