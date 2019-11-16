@@ -1,4 +1,5 @@
 use std::cell::RefCell;
+use std::f32;
 use std::rc::Rc;
 
 use finalfusion::prelude::*;
@@ -9,6 +10,14 @@ use gtk::ListStore;
 use crate::embeddings_ext::{EmbeddingsExt, WordStatus};
 use crate::models::EmbeddingsModel;
 
+/// A model of word similarity.
+///
+/// The model has the following columns:
+///
+/// * 0: Word
+/// * 1: Cosine similarity
+/// * 2: Cosine similarity as a string with 2 digits
+/// * 3: Cosine similarity as a percentage
 pub struct SimilarityModel {
     embeddings: RefCell<Rc<Embeddings<VocabWrap, StorageViewWrap>>>,
     inner: ListStore,
@@ -16,7 +25,12 @@ pub struct SimilarityModel {
 
 impl SimilarityModel {
     pub fn new(embeddings: Rc<Embeddings<VocabWrap, StorageViewWrap>>) -> Self {
-        let model = ListStore::new(&[String::static_type(), f32::static_type()]);
+        let model = ListStore::new(&[
+            String::static_type(),
+            f32::static_type(),
+            String::static_type(),
+            i32::static_type(),
+        ]);
 
         SimilarityModel {
             embeddings: RefCell::new(embeddings),
@@ -35,12 +49,23 @@ impl SimilarityModel {
         let similar_words = embeddings.analogy_flexible(query, 20).unwrap();
 
         for similar_word in similar_words {
+            let angular_similarity = Self::angular_similarity(similar_word.similarity.into_inner());
+
             self.inner.insert_with_values(
                 None,
-                &[0, 1],
-                &[&similar_word.word, &similar_word.similarity.into_inner()],
+                &[0, 1, 2, 3],
+                &[
+                    &similar_word.word,
+                    &similar_word.similarity.into_inner(),
+                    &format!("{:.2}", similar_word.similarity),
+                    &((angular_similarity * 100f32) as i32),
+                ],
             );
         }
+    }
+
+    fn angular_similarity(cosine_similarity: f32) -> f32 {
+        1f32 - (cosine_similarity.acos() / f32::consts::PI)
     }
 
     /// Clear the model.
@@ -60,10 +85,17 @@ impl SimilarityModel {
         };
 
         for similar_word in similar_words {
+            let angular_similarity = Self::angular_similarity(similar_word.similarity.into_inner());
+
             self.inner.insert_with_values(
                 None,
-                &[0, 1],
-                &[&similar_word.word, &similar_word.similarity.into_inner()],
+                &[0, 1, 2, 3],
+                &[
+                    &similar_word.word,
+                    &similar_word.similarity.into_inner(),
+                    &format!("{:.2}", similar_word.similarity),
+                    &((angular_similarity * 100f32) as i32),
+                ],
             );
         }
     }
