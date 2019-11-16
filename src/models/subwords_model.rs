@@ -1,8 +1,9 @@
 use std::cell::RefCell;
+use std::convert::TryFrom;
 use std::rc::Rc;
 
 use finalfusion::prelude::*;
-use finalfusion::vocab::NGramIndices;
+use finalfusion::vocab::{NGramIndices, Vocab};
 use gtk::prelude::*;
 use gtk::ListStore;
 
@@ -16,7 +17,7 @@ pub struct SubwordsModel {
 
 impl SubwordsModel {
     pub fn new(embeddings: Rc<Embeddings<VocabWrap, StorageViewWrap>>) -> Self {
-        let model = ListStore::new(&[String::static_type(), i64::static_type()]);
+        let model = ListStore::new(&[String::static_type(), u64::static_type()]);
 
         SubwordsModel {
             embeddings: RefCell::new(embeddings),
@@ -47,16 +48,19 @@ impl SubwordsModel {
             None => return,
         };
 
+        let n_words =
+            u64::try_from(embeddings.vocab().words_len()).expect("Cannot cast usize to u64");
+
         for (ngram, idx) in ngram_indices {
             // There is no embedding for the n-gram if it does not
             // have an index.
             let idx = match idx {
-                Some(idx) => idx,
+                Some(idx) => u64::try_from(idx).expect("Cannot cast usize to u64"),
                 None => continue,
             };
 
             self.inner
-                .insert_with_values(None, &[0, 1], &[&ngram, &(idx as i64)]);
+                .insert_with_values(None, &[0, 1], &[&ngram, &(idx - n_words)]);
         }
     }
 
