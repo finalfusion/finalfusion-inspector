@@ -2,7 +2,8 @@ use std::rc::Rc;
 
 use gtk::prelude::*;
 use gtk::{
-    Box, Builder, Button, Entry, IconSize, Image, SortColumn, SortType, TreeModelSort, TreeView,
+    Box, Builder, Button, CellRendererText, Entry, IconSize, Image, SortColumn, SortType,
+    TreeModelSort, TreeView,
 };
 
 use crate::embeddings_ext::WordStatus;
@@ -35,6 +36,12 @@ impl SubwordsWidget {
         let sortable_model = TreeModelSort::new(&model.model());
         sortable_model.set_sort_column_id(SortColumn::Index(1), SortType::Ascending);
         view.set_model(Some(&sortable_model));
+
+        let subword_idx_renderer: CellRendererText = builder
+            .get_object("subwordIdxRenderer")
+            .expect("Glade source is missing subwordIdxRenderer");
+        subword_idx_renderer.set_property_xalign(1f32);
+        subword_idx_renderer.set_property_xpad(10);
 
         let entry: Entry = builder
             .get_object("queryEntry")
