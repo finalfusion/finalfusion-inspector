@@ -14,6 +14,8 @@ class InspectorWindow(QMainWindow):
         self.ui = Ui_InspectorWindow()
         self.ui.setupUi(self)
 
+        self.ui.statusbar.hide()
+
         self._modelBackedWidgets = [
             SimilarityWidget(SimilarityModel(embeddings)), AnalogyWidget(SimilarityModel(embeddings)),
             SubwordsWidget(SubwordsModel(embeddings))]
