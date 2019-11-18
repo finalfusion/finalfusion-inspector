@@ -1,0 +1,38 @@
+{
+    "finalfusion": {
+        "branch": "master",
+        "description": "Nix package set for finalfusion projects",
+        "homepage": null,
+        "owner": "finalfusion",
+        "repo": "nix-packages",
+        "rev": "27b532a4360a73331a00a3454e912b20b3ee4370",
+        "sha256": "1649z7b8s6n47b4frja277w9gf022gyk3aw05lzs5vr0vms0xfi7",
+        "type": "tarball",
+        "url": "https://github.com/finalfusion/nix-packages/archive/27b532a4360a73331a00a3454e912b20b3ee4370.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "niv": {
+        "branch": "master",
+        "description": "Easy dependency management for Nix projects",
+        "homepage": "https://github.com/nmattia/niv",
+        "owner": "nmattia",
+        "repo": "niv",
+        "rev": "6da5c19aa220dfd840031e0cdbe83bf8f807fd50",
+        "sha256": "173gkldf4in77ksm8bgf7bhkfyc4ayddka4cgxv5361kpgyvgccw",
+        "type": "tarball",
+        "url": "https://github.com/nmattia/niv/archive/6da5c19aa220dfd840031e0cdbe83bf8f807fd50.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "nixpkgs": {
+        "branch": "nixos-19.09",
+        "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
+        "homepage": "https://github.com/NixOS/nixpkgs",
+        "owner": "NixOS",
+        "repo": "nixpkgs-channels",
+        "rev": "5f506b95f9f6290f4c46f523cc3f5cef581c5666",
+        "sha256": "14ry2fs2pny2shlg2dq8c9vns636gv0zvfh0dmyy4bnq713k377n",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/5f506b95f9f6290f4c46f523cc3f5cef581c5666.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    }
+}
