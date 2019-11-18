@@ -1,5 +1,8 @@
+import math
+
+
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QVariant, Qt, pyqtSignal
-from PyQt5.QtWidgets import QHeaderView, QWidget
+from PyQt5.QtWidgets import QApplication, QHeaderView, QStyleOptionProgressBar, QStyle, QStyledItemDelegate, QWidget
 
 
 from finalfusion_inspector.ui_analogywidget import Ui_AnalogyWidget
@@ -19,6 +22,10 @@ class AnalogyWidget(QWidget):
         self.ui.similarView.setModel(self.model)
         self.ui.similarView.horizontalHeader() \
                            .setSectionResizeMode(QHeaderView.Stretch)
+        self.ui.similarView.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeToContents)
+        self.ui.similarView.setItemDelegateForColumn(
+            1, SimilarityCellDelegate())
 
         self.ui.queryPushButton.setEnabled(False)
         self.ui.queryPushButton.clicked.connect(self.querySubmitted)
@@ -127,6 +134,28 @@ class SimilarityModel(QAbstractItemModel):
         self.layoutChanged.emit()
 
 
+class SimilarityCellDelegate(QStyledItemDelegate):
+    def __init__(self):
+        super(SimilarityCellDelegate, self).__init__()
+
+    def angularSimilarity(self, cosineSimilarity):
+        return 1.0 - (math.acos(cosineSimilarity) / math.pi)
+
+    def paint(self, painter, option, index):
+        angularSimilarity = self.angularSimilarity(float(index.data()))
+
+        progressBarOption = QStyleOptionProgressBar()
+        progressBarOption.rect = option.rect
+        progressBarOption.minimum = 0
+        progressBarOption.maximum = 100
+        progressBarOption.progress = round(100.0 * angularSimilarity)
+        progressBarOption.text = "%.2f" % angularSimilarity
+        progressBarOption.textVisible = True
+
+        QApplication.style().drawControl(
+            QStyle.CE_ProgressBar, progressBarOption, painter)
+
+
 class SimilarityWidget(QWidget):
     def __init__(self, model):
         super(SimilarityWidget, self).__init__()
@@ -139,6 +168,10 @@ class SimilarityWidget(QWidget):
         self.ui.similarView.setModel(self.model)
         self.ui.similarView.horizontalHeader() \
                            .setSectionResizeMode(QHeaderView.Stretch)
+        self.ui.similarView.setItemDelegateForColumn(
+            1, SimilarityCellDelegate())
+        self.ui.similarView.horizontalHeader().setSectionResizeMode(
+            1, QHeaderView.ResizeToContents)
 
         self.ui.queryPushButton.setEnabled(False)
         self.ui.queryPushButton.clicked.connect(self.querySubmitted)
