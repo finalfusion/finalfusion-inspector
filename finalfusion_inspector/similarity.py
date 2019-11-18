@@ -1,6 +1,3 @@
-from enum import Enum
-
-
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QVariant, Qt, pyqtSignal
 from PyQt5.QtWidgets import QHeaderView, QWidget
 
@@ -8,28 +5,6 @@ from PyQt5.QtWidgets import QHeaderView, QWidget
 from finalfusion_inspector.ui_analogywidget import Ui_AnalogyWidget
 from finalfusion_inspector.ui_similaritywidget import Ui_SimilarityWidget
 from finalfusion_inspector.validators import QueryValidator, applyValidityColor
-
-
-class WordStatus(Enum):
-    KNOWN = 0
-    SUBWORD = 1
-    UNKNOWN = 2
-
-
-def is_vocab_word(vocab, word):
-    # Figure out whether the word is unknown. Checking whether
-    # there are multiple indices is not good enough, since short
-    # words may only have one n-gram. So we check if the first
-    # index is in the range of the vocab.
-
-    indices = vocab.item_to_indices(word)
-
-    if indices is None or len(indices) == 0:
-        return WordStatus.UNKNOWN
-    elif indices[0] < len(vocab):
-        return WordStatus.KNOWN
-
-    return WordStatus.SUBWORD
 
 
 class AnalogyWidget(QWidget):
