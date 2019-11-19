@@ -2,12 +2,13 @@ import math
 import platform
 
 
-from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QVariant, Qt, pyqtSignal
+from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QThreadPool, QVariant, Qt, pyqtSignal
 from PyQt5.QtWidgets import QApplication, QHeaderView, QStyleOptionProgressBar, QStyle, QStyledItemDelegate, QWidget
 
 
 from finalfusion_inspector.ui_analogywidget import Ui_AnalogyWidget
 from finalfusion_inspector.ui_similaritywidget import Ui_SimilarityWidget
+from finalfusion_inspector.util import RunnableFunction
 from finalfusion_inspector.validators import QueryValidator, applyValidityColor
 
 
@@ -81,9 +82,11 @@ class SimilarityModel(QAbstractItemModel):
         self._similarities = []
 
     def analogyQuery(self, words):
-        self._similarities = self.embeddings.analogy(
-            words[0], words[1], words[2], limit=20)
-        self.layoutChanged.emit()
+        pool = QThreadPool.globalInstance()
+        runnable = RunnableFunction(self.embeddings.analogy,
+                                    words[0], words[1], words[2], limit=20)
+        runnable.signals.success.connect(self.processResults)
+        pool.start(runnable)
 
     def clear(self):
         self._similarities = []
@@ -122,6 +125,10 @@ class SimilarityModel(QAbstractItemModel):
     def parent(self, index):
         return QModelIndex()
 
+    def processResults(self, results):
+        self._similarities = results
+        self.layoutChanged.emit()
+
     def rowCount(self, index):
         return len(self.similarities)
 
@@ -135,8 +142,10 @@ class SimilarityModel(QAbstractItemModel):
         return self._similarities
 
     def query(self, word):
-        self._similarities = self.embeddings.word_similarity(word, limit=20)
-        self.layoutChanged.emit()
+        pool = QThreadPool.globalInstance()
+        runnable = RunnableFunction(self.embeddings.word_similarity, word, limit=20)
+        runnable.signals.success.connect(self.processResults)
+        pool.start(runnable)
 
 
 class SimilarityCellDelegate(QStyledItemDelegate):
