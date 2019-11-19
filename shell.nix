@@ -8,8 +8,10 @@ in mkShell {
 
   propagatedBuildInputs = [
     (python3.withPackages (ps: with ps; [
+      matplotlib
       pyqt5
       setuptools
+      scikitlearn
       toml
     ]))
 

@@ -20,7 +20,9 @@ setup(
     },
     install_requires=[
         'finalfusion == 0.6.*',
+        'matplotlib == 3',
         'PyQt5 >= 5.13',
+        'scikit-learn == 0.21.*',
         'toml == 0.10.*'
     ],
 )

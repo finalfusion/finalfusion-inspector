@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QFileDialog, QMessageBox, QMainWindow
 
 from finalfusion_inspector.ui_inspectorwindow import Ui_InspectorWindow
 from finalfusion_inspector.metadata import MetadataDialog, MetadataModel
+from finalfusion_inspector.word_sets import MDSModel, WordSetsWidget
 from finalfusion_inspector.similarity import AnalogyWidget, SimilarityModel, SimilarityWidget
 from finalfusion_inspector.subwords import SubwordsModel, SubwordsWidget
 
@@ -18,7 +19,7 @@ class InspectorWindow(QMainWindow):
 
         self._modelBackedWidgets = [
             SimilarityWidget(SimilarityModel(embeddings)), AnalogyWidget(SimilarityModel(embeddings)),
-            SubwordsWidget(SubwordsModel(embeddings))]
+            SubwordsWidget(SubwordsModel(embeddings)), WordSetsWidget(MDSModel(embeddings))]
 
         self.ui.tabWidget.addTab(
             self.modelBackedWidgets[0],
@@ -31,6 +32,10 @@ class InspectorWindow(QMainWindow):
         self.ui.tabWidget.addTab(
             self.modelBackedWidgets[2],
             "Subwords")
+
+        self.ui.tabWidget.addTab(
+            self.modelBackedWidgets[3],
+            "Word sets")
 
         self._metadataDialog = MetadataDialog(MetadataModel(embeddings))
         self._modelBackedWidgets.append(self._metadataDialog)
