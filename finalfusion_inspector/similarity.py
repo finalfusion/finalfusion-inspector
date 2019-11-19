@@ -1,4 +1,5 @@
 import math
+import platform
 
 
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QVariant, Qt, pyqtSignal
@@ -24,8 +25,12 @@ class AnalogyWidget(QWidget):
                            .setSectionResizeMode(QHeaderView.Stretch)
         self.ui.similarView.horizontalHeader().setSectionResizeMode(
             1, QHeaderView.ResizeToContents)
-        self.ui.similarView.setItemDelegateForColumn(
-            1, SimilarityCellDelegate())
+
+        # Does not work correctly on macOS, see:
+        # https://bugreports.qt.io/browse/QTBUG-72558
+        if platform.system() != "Darwin":
+            self.ui.similarView.setItemDelegateForColumn(
+                1, SimilarityCellDelegate())
 
         self.ui.queryPushButton.setEnabled(False)
         self.ui.queryPushButton.clicked.connect(self.querySubmitted)
@@ -168,8 +173,9 @@ class SimilarityWidget(QWidget):
         self.ui.similarView.setModel(self.model)
         self.ui.similarView.horizontalHeader() \
                            .setSectionResizeMode(QHeaderView.Stretch)
-        self.ui.similarView.setItemDelegateForColumn(
-            1, SimilarityCellDelegate())
+        if platform.system() != "Darwin":
+            self.ui.similarView.setItemDelegateForColumn(
+                1, SimilarityCellDelegate())
         self.ui.similarView.horizontalHeader().setSectionResizeMode(
             1, QHeaderView.ResizeToContents)
 
