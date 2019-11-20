@@ -72,11 +72,15 @@ class SubwordsModel(QAbstractItemModel):
 
     def query(self, word):
         try:
-            self._subwords = self.embeddings.vocab().ngram_indices(word)
+            # Get subwords, filtering subwords without an index.
+            self._subwords = [ngram for ngram in
+                              self.embeddings.vocab().ngram_indices(word)
+                              if ngram[1] is not None]
         except ValueError:
             return
 
         self.layoutChanged.emit()
+
 
 class SubwordsWidget(QWidget):
     def __init__(self, model):
