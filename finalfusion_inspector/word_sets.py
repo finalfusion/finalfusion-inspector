@@ -1,6 +1,7 @@
 from matplotlib.backends.backend_qt5agg import (
     FigureCanvas, NavigationToolbar2QT as NavigationToolbar)
 from matplotlib.figure import Figure
+from mpl_toolkits.mplot3d import Axes3D
 from PyQt5.QtCore import QObject, Qt, pyqtSignal
 from PyQt5.QtWidgets import QMainWindow, QWidget
 from sklearn.manifold import MDS
@@ -59,7 +60,7 @@ class MDSModel(QObject):
 
         vecs = [self.embeddings.embedding(word) for word in words]
         mds = MDS(
-            n_components=2,
+            n_components=3,
             dissimilarity="euclidean",
             max_iter=self.max_iter,
             eps=self.epsilon,
@@ -80,7 +81,7 @@ class WordSetsWidget(QWidget):
         self._canvas = canvas = FigureCanvas(Figure(figsize=(5, 5)))
         self.ui.verticalLayout.addWidget(canvas)
         self.ui.verticalLayout.addWidget(NavigationToolbar(canvas, self))
-        self._subplot = self._canvas.figure.subplots()
+        self._subplot = self._canvas.figure.add_subplot(111, projection='3d')
         self._canvas.figure.tight_layout()
 
         self.model.changed.connect(self.visualizeWords)
@@ -111,9 +112,10 @@ class WordSetsWidget(QWidget):
     def visualizeWords(self, words, coords):
         self.subplot.clear()
 
-        self.subplot.scatter(coords[:, 0], coords[:, 1])
+        self.subplot.scatter(coords[:, 0], coords[:, 1], coords[:, 2])
         for i, word in enumerate(words):
-            self.subplot.annotate(word, coords[i])
+            #self.subplot.annotate(word, coords[i])
+            self.subplot.text(coords[i, 0], coords[i, 1], coords[i, 2], word)
 
         self.subplot.figure.canvas.draw()
 
