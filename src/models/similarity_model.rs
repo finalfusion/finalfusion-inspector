@@ -57,7 +57,7 @@ impl SimilarityModel {
                 &[
                     &similar_word.word,
                     &similar_word.similarity.into_inner(),
-                    &format!("{:.2}", similar_word.similarity),
+                    &format!("{:.2}", angular_similarity),
                     &((angular_similarity * 100f32) as i32),
                 ],
             );
@@ -93,7 +93,7 @@ impl SimilarityModel {
                 &[
                     &similar_word.word,
                     &similar_word.similarity.into_inner(),
-                    &format!("{:.2}", similar_word.similarity),
+                    &format!("{:.2}", angular_similarity),
                     &((angular_similarity * 100f32) as i32),
                 ],
             );
