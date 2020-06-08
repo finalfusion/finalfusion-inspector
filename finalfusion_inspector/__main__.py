@@ -39,7 +39,7 @@ def main():
         embeddingsFile = openEmbeddingsDialog()
 
     try:
-        embeddings = finalfusion.Embeddings(embeddingsFile, mmap=True)
+        embeddings = finalfusion.load_finalfusion(embeddingsFile, mmap=True)
     except Exception as e:
         QMessageBox.critical(
             None, "Cannot load embeddings", "Cannot load embeddings from %s: %s" %

@@ -1,5 +1,6 @@
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QSortFilterProxyModel, QVariant, Qt, pyqtSignal
 from PyQt5.QtWidgets import QHeaderView, QWidget
+from finalfusion.vocab.subword import SubwordVocab
 
 
 from finalfusion_inspector.ui_subwordswidget import Ui_SubwordsWidget
@@ -30,7 +31,7 @@ class SubwordsModel(QAbstractItemModel):
             if index.column() == 0:
                 return ngram
             elif index.column() == 1:
-                return ngram_index - len(self.embeddings.vocab())
+                return ngram_index
         elif role == Qt.TextAlignmentRole:
             if index.column() == 1:
                 return Qt.AlignRight
@@ -71,13 +72,11 @@ class SubwordsModel(QAbstractItemModel):
         return self._subwords
 
     def query(self, word):
-        try:
-            # Get subwords, filtering subwords without an index.
-            self._subwords = [ngram for ngram in
-                              self.embeddings.vocab().ngram_indices(word)
-                              if ngram[1] is not None]
-        except ValueError:
-            return
+        if not isinstance(self.embeddings.vocab, SubwordVocab):
+            self._subwords = []
+        else:
+            self._subwords = self.embeddings.vocab.subword_indexer.subword_indices(
+                word, with_ngrams=True)
 
         self.layoutChanged.emit()
 

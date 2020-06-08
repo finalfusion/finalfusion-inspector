@@ -5,10 +5,10 @@
         "homepage": null,
         "owner": "finalfusion",
         "repo": "nix-packages",
-        "rev": "27b532a4360a73331a00a3454e912b20b3ee4370",
-        "sha256": "1649z7b8s6n47b4frja277w9gf022gyk3aw05lzs5vr0vms0xfi7",
+        "rev": "4f885fb3ddab7faa28430279c29675ccf41b2db7",
+        "sha256": "17k34yf0pj08qzzj2mmyfbjf68jdadsy8f2gyl2667yybqv9ykq3",
         "type": "tarball",
-        "url": "https://github.com/finalfusion/nix-packages/archive/27b532a4360a73331a00a3454e912b20b3ee4370.tar.gz",
+        "url": "https://github.com/finalfusion/nix-packages/archive/4f885fb3ddab7faa28430279c29675ccf41b2db7.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
