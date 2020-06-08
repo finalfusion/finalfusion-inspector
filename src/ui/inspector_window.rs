@@ -65,9 +65,9 @@ impl InspectorWindow {
         let inspector_window = Rc::new(InspectorWindow {
             inner: window.clone(),
             widgets: vec![
-                similarity_widget.clone(),
-                analogy_widget.clone(),
-                subwords_widget.clone(),
+                similarity_widget,
+                analogy_widget,
+                subwords_widget,
                 metadata_dialog.clone(),
             ],
         });
