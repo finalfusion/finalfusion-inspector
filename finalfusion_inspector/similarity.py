@@ -84,7 +84,7 @@ class SimilarityModel(QAbstractItemModel):
     def analogyQuery(self, words):
         pool = QThreadPool.globalInstance()
         runnable = RunnableFunction(self.embeddings.analogy,
-                                    words[0], words[1], words[2], limit=20)
+                                    words[0], words[1], words[2], k=20)
         runnable.signals.success.connect(self.processResults)
         pool.start(runnable)
 
@@ -143,7 +143,8 @@ class SimilarityModel(QAbstractItemModel):
 
     def query(self, word):
         pool = QThreadPool.globalInstance()
-        runnable = RunnableFunction(self.embeddings.word_similarity, word, limit=20)
+        runnable = RunnableFunction(
+            self.embeddings.word_similarity, word, k=20)
         runnable.signals.success.connect(self.processResults)
         pool.start(runnable)
 

@@ -57,7 +57,7 @@ class InspectorWindow(QMainWindow):
 
         # Try to read the embeddings.
         try:
-            embeddings = finalfusion.Embeddings(embeddingsFile, mmap=True)
+            embeddings = finalfusion.load_finalfusion(embeddingsFile, mmap=True)
         except Exception as e:
             QMessageBox.critical(
                 self, "Cannot load embeddings", "Cannot load embeddings from %s: %s" %

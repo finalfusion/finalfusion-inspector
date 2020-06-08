@@ -23,9 +23,10 @@ def applyValidityColor(sender):
 
 
 def is_vocab_word(model, word):
-    vocab = model.embeddings.vocab()
+    vocab = model.embeddings.vocab
 
-    indices = vocab.get(word)
+    indices = vocab.idx(word)
+
     if indices is None:
         return WordStatus.UNKNOWN
     elif isinstance(indices, int):

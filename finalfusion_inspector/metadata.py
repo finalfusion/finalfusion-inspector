@@ -1,6 +1,5 @@
 from PyQt5.QtCore import QAbstractItemModel, QModelIndex, QVariant, Qt
 from PyQt5.QtWidgets import QHeaderView, QDialog
-import toml
 
 
 from finalfusion_inspector.ui_metadatadialog import Ui_MetadataDialog
@@ -94,11 +93,11 @@ class MetadataModel(QAbstractItemModel):
     def updateMetadata(self):
         self._metadata = []
 
-        if not isinstance(self.embeddings.metadata, str):
+        if not isinstance(self.embeddings.metadata, dict):
             self.layoutChanged.emit()
             return
 
-        metadata = toml.loads(self.embeddings.metadata)
+        metadata = self.embeddings.metadata
         for key, value in metadata.items():
             if isinstance(value, float):
                 value = "%.2e" % value
