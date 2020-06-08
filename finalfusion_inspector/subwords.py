@@ -56,6 +56,10 @@ class SubwordsModel(QAbstractItemModel):
     def index(self, row, column, parent):
         return self.createIndex(row, column)
 
+    @property
+    def hasSubwordVocab(self):
+        return isinstance(self._embeddings.vocab, SubwordVocab)
+
     def parent(self, index):
         return QModelIndex()
 
@@ -72,7 +76,7 @@ class SubwordsModel(QAbstractItemModel):
         return self._subwords
 
     def query(self, word):
-        if not isinstance(self.embeddings.vocab, SubwordVocab):
+        if not self.hasSubwordVocab:
             self._subwords = []
         else:
             self._subwords = self.embeddings.vocab.subword_indexer.subword_indices(
@@ -106,6 +110,9 @@ class SubwordsWidget(QWidget):
         self.ui.queryLineEdit.returnPressed.connect(self.querySubmitted)
         self.ui.queryLineEdit.textChanged.connect(self.queryChanged)
 
+        self.model.changed.connect(self.updateVisibility)
+        self.updateVisibility()
+
     def applyValidityColor(self):
         applyValidityColor(self.sender())
 
@@ -129,3 +136,6 @@ class SubwordsWidget(QWidget):
     @property
     def model(self):
         return self._model
+
+    def updateVisibility(self):
+        self.setEnabled(self.model.hasSubwordVocab)
